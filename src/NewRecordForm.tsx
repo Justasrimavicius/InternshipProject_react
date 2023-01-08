@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect} from 'react';
 import { TextField, Checkbox, Input, InputLabel, Button } from '@mui/material';
 
 function NewRecordForm() {
@@ -11,9 +11,17 @@ function NewRecordForm() {
     const [fatsErr, setFatsErr] = useState(false);
     const [dateErr, setDateErr] = useState(false);
 
-    function checkForm(e: any){
-        // e.preventDefault();
+    const [success, setSuccess] = useState('');
 
+    useEffect(()=>{
+        if(success != ''){
+            setTimeout(() => {
+                setSuccess('');
+            }, 3000);
+        }
+    },[success])
+
+    function checkForm(e: any){
         const date = (document.getElementById('date') as HTMLInputElement).value;
         const calories = parseFloat((document.getElementById('calories') as HTMLInputElement).value);
         const protein = parseFloat((document.getElementById('protein') as HTMLInputElement).value);
@@ -26,49 +34,61 @@ function NewRecordForm() {
         setFatsErr(false);
         setDateErr(false);
         setErrorText('');
+
         if(!/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/.test(date)){
             setDateErr(true);
             setErrorText(`Date doesn't follow the pattern yyyy-mm-dd`);
+            return;
         } else if(date[0] == '0'){
             setDateErr(true);
             setErrorText(`Dates first number can't be a zero`);
+            return;
         }
 
         // for simplicity sake, dont allow any field to have a value of more than 10000
         if(calories > 10000){
             setCaloriesErr(true);
             setErrorText('Too much calories');
+            return;
         } else if(protein > 10000){
             setProteinErr(true);
             setErrorText('Too much protein');
+            return;
         } else if(carbs > 10000){
             setCarbsErr(true);
             setErrorText('Too much carbs');
+            return;
         } else if(fats > 10000){
             setFatsErr(true);
             setErrorText('Too much fats');
+            return;
         }
 
         // dont allow empty fields
         if(!calories && calories != 0){
             setCaloriesErr(true);
             setErrorText(`Can't leave empty fields`)
+            return
         } else if(!protein && protein != 0){
             setProteinErr(true);
             setErrorText(`Can't leave empty fields`)
+            return
         } else if(!carbs && carbs != 0){
             setCarbsErr(true);
             setErrorText(`Can't leave empty fields`)
+            return
         } else if(!fats && fats != 0){
             setFatsErr(true);
-            setErrorText(`Can't leave empty fields`)
+            setErrorText(`Can't leave empty fields`);
+            return;
         }
 
             let xhr = new XMLHttpRequest();
-            xhr.open("POST", `http://localhost:5258/newRecord`, true);
+            xhr.open("POST", `http://localhost:5258/api/Record`, true);
 
             xhr.setRequestHeader('Content-Type', 'application/json');
-
+            xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:3000/');
+            console.log('no reach noo')
             xhr.send(JSON.stringify({
                 date,
                 calories,
@@ -79,13 +99,19 @@ function NewRecordForm() {
             }));
     
             xhr.onload = ()=>{
-                const parsedResponse = JSON.parse(xhr.responseText);
-                console.log(parsedResponse)
+                if(JSON.parse(xhr.responseText).id){ // a successful request will have an id field
+                    setSuccess('New record added successfully!');
+                } else {
+                    setSuccess('An error has occured.')
+                }
+
             }
+
     }
 
     return (
         <div className='NewRecordForm'>
+            {success != '' ? <div className='overlay'><p className='successMsg'>{success}</p></div> : null}
             <form id='NewRecordForm-form'>
                 <h5>Save your macronutrients of the day</h5>
                 <div className='NewRecordForm-inputs'>
