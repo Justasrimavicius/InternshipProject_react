@@ -10,6 +10,8 @@ import Paper from '@mui/material/Paper';
 
 function ListPage(props: any) {
 
+
+  // responsiveness element for the font, in order for mobile view to look decent
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.black,
@@ -31,6 +33,7 @@ function ListPage(props: any) {
     },
   }));
   
+  // a short helper function on creating data fields
   function createData(date: string, calories: number, protein: number, carbs: number, fat: number){
     return { date, calories, protein, carbs, fat };
   }
@@ -72,7 +75,7 @@ function ListPage(props: any) {
               </TableBody>
           </Table>
           </TableContainer>
-          <button className='ListPage-addDataBtn'>Add data</button>
+          <button className='ListPage-addDataBtn' onClick={()=>{document.location.href = 'newRecord'}}>Add data</button>
       </div>
   );
 }

@@ -1,3 +1,6 @@
+.DetailsPage{
+    width: 100vw;
+}
 .DetailsPage-goBackBtn{
     width: 100%;
     height: 40px;
@@ -9,4 +12,7 @@
     outline: none;
 
     transition: 0.5s all;
+}
+.DetailsPage-goBackBtn:hover{
+    background-color: rgb(227, 227, 227);
 }
