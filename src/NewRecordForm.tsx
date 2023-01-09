@@ -88,7 +88,6 @@ function NewRecordForm() {
 
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:3000/');
-            console.log('no reach noo')
             xhr.send(JSON.stringify({
                 date,
                 calories,

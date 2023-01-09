@@ -8,8 +8,30 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+import { useEffect, useState } from 'react';
+
+interface dataInterface{
+  calories: number,
+  carbs: number,
+  protein: number,
+  fats: number,
+  date: string,
+  goalsAchieved: boolean,
+  id: string
+}
+
 function ListPage(props: any) {
 
+  const [data, setData] = useState<dataInterface[]>([]);
+
+  useEffect(()=>{
+    fetch('http://localhost:5258/api/Record/all')
+    .then(result=>{result.json()
+      .then(records=>{
+        setData(records);
+      })
+    })
+  },[])
 
   // responsiveness element for the font, in order for mobile view to look decent
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -32,51 +54,36 @@ function ListPage(props: any) {
       },
     },
   }));
-  
-  // a short helper function on creating data fields
-  function createData(date: string, calories: number, protein: number, carbs: number, fat: number){
-    return { date, calories, protein, carbs, fat };
-  }
-  
-  const rows = [
-    createData('2023-01-05', 4000, 200, 500, 70),
-    createData('2023-01-04', 3900, 177, 477, 81),
-    createData('2023-01-03', 2620, 160, 440, 60),
-    createData('2023-01-02', 3001, 122, 122, 130),
-    createData('2023-01-01', 4444, 244, 442, 84),
-  ];
 
   return (
-      <div>
-          <TableContainer component={Paper}>
-          <Table aria-label="food tracking table" className='ListPage-table'>
+    <>
+      {data.length != 0 ? <div>
+        <TableContainer component={Paper} style={{maxHeight:'400px'}}>
+          <Table aria-label="food tracking table" className='ListPage-table' stickyHeader>
             <TableHead>
               <TableRow>
                 <StyledTableCell>Date</StyledTableCell>
                 <StyledTableCell align="right">Calories</StyledTableCell>
-                <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-                <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-                <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+                <StyledTableCell align="right">Id in database</StyledTableCell>
               </TableRow>
             </TableHead>
 
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.date} onClick={()=>{document.location.href = `details/${row.date}`}} className='ListPage-tableRow'>
+                {data.map((row) => (
+                  <TableRow key={row.id} onClick={()=>{document.location.href = `details/${row.id}`}} className='ListPage-tableRow'>
                     <StyledTableCell component="th" scope="row">
                         {row.date}
                     </StyledTableCell>
                     <StyledTableCell align="right">{row.calories}</StyledTableCell>
-                    <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                    <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                    <StyledTableCell align="right">{row.protein}</StyledTableCell>
+                    <StyledTableCell align="right">{row.id}</StyledTableCell>
                   </TableRow>
                 ))}
               </TableBody>
           </Table>
-          </TableContainer>
-          <button className='ListPage-addDataBtn' onClick={()=>{document.location.href = 'newRecord'}}>Add data</button>
-      </div>
+        </TableContainer>
+        <button className='ListPage-addDataBtn' onClick={()=>{document.location.href = 'newRecord'}}>Add data</button>
+      </div> : null}
+      </>
   );
 }
 

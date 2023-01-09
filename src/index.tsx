@@ -25,7 +25,7 @@ root.render(
       <h1 className='main-heading'>PresentConnection React/c# task</h1>
       <Routes>
         <Route path='/' element={<ListPage />} />
-        <Route path='/details/:date' element={<DetailsPage />} />
+        <Route path='/details/:id' element={<DetailsPage />} />
         <Route path='/newRecord' element={<NewRecordForm />} />
       </Routes>
     </Router>
