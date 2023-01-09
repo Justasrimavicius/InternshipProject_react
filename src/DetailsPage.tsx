@@ -26,10 +26,7 @@ function DetailsPage() {
     const params = useParams();
     const [field, setField] = useState<fieldIf | null>(null);
 
-
-    // console.log(id)
     useEffect(()=>{
-        console.log(params);
         fetch(`http://localhost:5258/api/Record/${params.id}`)
           .then((response)=>{
             response.json()
