@@ -1,6 +1,6 @@
 import React from 'react';
-import { useRef, useState, useEffect} from 'react';
-import { TextField, Checkbox, Input, InputLabel, Button } from '@mui/material';
+import { useState, useEffect} from 'react';
+import { Checkbox, Input, InputLabel, Button } from '@mui/material';
 
 function NewRecordForm() {
 
@@ -35,6 +35,7 @@ function NewRecordForm() {
         setDateErr(false);
         setErrorText('');
 
+        // date format testing - dont allow year to be more than 10000, dont allow first year number to be 0
         if(!/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/.test(date)){
             setDateErr(true);
             setErrorText(`Date doesn't follow the pattern yyyy-mm-dd`);
@@ -83,29 +84,28 @@ function NewRecordForm() {
             return;
         }
 
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", `http://localhost:5258/api/Record`, true);
+        // post request for putting a new record in the database
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", `http://localhost:5258/api/Record`, true);
 
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:3000/');
-            xhr.send(JSON.stringify({
-                date,
-                calories,
-                protein,
-                carbs,
-                fats,
-                goalsAchieved
-            }));
-    
-            xhr.onload = ()=>{
-                if(JSON.parse(xhr.responseText).id){ // a successful request will have an id field
-                    setSuccess('New record added successfully!');
-                } else {
-                    setSuccess('An error has occured.')
-                }
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:3000/');
+        xhr.send(JSON.stringify({
+            date,
+            calories,
+            protein,
+            carbs,
+            fats,
+            goalsAchieved
+        }));
 
+        xhr.onload = ()=>{
+            if(JSON.parse(xhr.responseText).id){ // a successful request will have an id field
+                setSuccess('New record added successfully!');
+            } else {
+                setSuccess('An error has occured.')
             }
-
+        }
     }
 
     return (

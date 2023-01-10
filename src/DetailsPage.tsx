@@ -2,17 +2,9 @@ import React from 'react';
 import {useParams} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { TextField, Checkbox, Input, InputLabel, Button } from '@mui/material';
+import { Checkbox } from '@mui/material';
 
-interface fieldIf{
+interface fieldInterface{
     calories: number,
     protein: number,
     fats: number,
@@ -24,13 +16,15 @@ interface fieldIf{
 
 function DetailsPage() {
     const params = useParams();
-    const [field, setField] = useState<fieldIf | null>(null);
+    const [field, setField] = useState<fieldInterface | null>(null);
 
     useEffect(()=>{
         fetch(`http://localhost:5258/api/Record/${params.id}`)
           .then((response)=>{
             response.json()
               .then((finalData)=>{
+                console.log(`GET(single Record) for id ${params.id} response is:`);
+                console.log(finalData);
                 setField(finalData);
               })
           })

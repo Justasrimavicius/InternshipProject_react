@@ -20,6 +20,8 @@ import NewRecordForm from './NewRecordForm';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+// basoc React routing implemented
 root.render(
     <Router>
       <h1 className='main-heading'>PresentConnection React/c# task</h1>

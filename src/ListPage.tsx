@@ -32,7 +32,7 @@ function ListPage(props: any) {
     fetch('http://localhost:5258/api/Record/all')
     .then(result=>{result.json()
       .then(records=>{
-        // records.sort((a: dataInterface, b: dataInterface)=>{a.calories - b.calories});
+        console.log(`GET all records fetch request response is:`);
         console.log(records)
         setData(records);
       })
@@ -62,43 +62,32 @@ function ListPage(props: any) {
   }));
 
   function sortData(order: string){
-    let temp: dataInterface[];
+    let temp: dataInterface[] = [];
+
     if(sortingMenu == 'calories'){
       if(order == 'asc'){
         temp  = data.sort((a: dataInterface, b:dataInterface)=>{return a.calories - b.calories});
-        setData(temp.slice(0,1))
-        setTimeout(() => {
-        setData(temp);
-          
-        }, 10);
-      }
-      if(order == 'dsc'){
+      } else if(order == 'dsc'){
         temp  = data.sort((a: dataInterface, b:dataInterface)=>{return b.calories - a.calories});
-        setData(temp.slice(0,1))
-        setTimeout(() => {
-        setData(temp);
-          
-        }, 10);
       }
     } else{
       new Date('2013-05-23');
       if(order == 'asc'){
         temp  = data.sort((a: dataInterface, b:dataInterface)=>{return new Date(a.date).valueOf() - new Date(b.date).valueOf()});
-        setData(temp.slice(0,1))
-        setTimeout(() => {
-        setData(temp);
-          
-        }, 10);
-      }
-      if(order == 'dsc'){
+      } else if(order == 'dsc'){
         temp  = data.sort((a: dataInterface, b:dataInterface)=>{return new Date(b.date).valueOf() - new Date(a.date).valueOf()});
-        setData(temp.slice(0,1))
-        setTimeout(() => {
-        setData(temp);
-          
-        }, 10);
+
       }
     }
+    if(temp.length != 0){
+      setData(temp.slice(0,1))
+      setTimeout(() => {
+      setData(temp);
+        
+      }, 10);
+    }
+
+    // makes the sorting menu not visible
     showSortingMenu('');
   }
 
